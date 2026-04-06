@@ -4,7 +4,7 @@ import numpy as np
 import scipy.optimize as opt
 import networkx as nx
 
-from model import BusComponent, SynchronousMachine, Load, BranchComponent, TransmissionLine, Transformer
+from fourpace.model import BusComponent, SynchronousMachine, Load, BranchComponent, TransmissionLine, Transformer
 
 class Bus(nx.Graph):
     def __init__(self, name: str, Vbase: float, bus_type: str = 'PQ'):
