@@ -1,7 +1,12 @@
 # ⚡ Four-Quadrant Power Analysis & Computational Engine (4PACE)
 
+[![Status](https://img.shields.io/badge/Status-Early%20Access-orange.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> **⚠️ Early Access Notice**
+> 
+> This project is currently in **Early Access (Pre-v1.0.0)**. While the core engine is functional and capable of solving complex power flow and optimization problems, it is still undergoing significant development. Features may change, and bug reports or feedback are highly encouraged to help reach the stable v1.0.0 release.
 
 4PACE is a high-precision Power System Optimization Engine designed for analyzing and determining the most efficient operating points for electrical grids. Developed entirely in Python using only core scientific libraries, it ensures maximum computational efficiency and provides the flexibility needed to scale capabilities for modern grid demands.
 
@@ -30,6 +35,6 @@ The name 4PACE reflects the core pillars of this project:
 Clone this repository and install the required dependencies. This engine is intentionally kept lightweight and relies only on core scientific libraries.
 
 ```bash
-git clone [https://github.com/yourusername/python_power_dispatch.git](https://github.com/yourusername/python_power_dispatch.git)
-cd python_power_dispatch
+git clone https://github.com/yourusername/4PACE.git
+cd 4PACE
 pip install -r requirements.txt
