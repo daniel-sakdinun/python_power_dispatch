@@ -78,8 +78,8 @@ Hour,Load_B,Candidate_PV
 Execute the planning and operation sequence using the highly optimized Core Engine.
 ```python
 import pandas as pd
-from fourpace.psys import Grid
-from fourpace.pfa import CEP, plan
+from fourpace.psys import Grid, CEP
+from fourpace.pfa import plan
 
 # Load configurations
 grid = Grid.load('config.yaml')
