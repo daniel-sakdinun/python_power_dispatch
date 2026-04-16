@@ -1,122 +1,214 @@
-# ==========================================
-# Power System Grid Configuration
-# ==========================================
-Sbase: 510
-
-# --- Bus Definitions ---
+Sbase: 100.0
 buses:
-  - name: A01
-    Vbase: 6.9
+  - name: "1"
+    Vbase: 132.0
     bus_type: Slack
     components:
       - type: SynchronousMachine
-        name: A01_G1
-        S_rated: 100
-        pf: 0.85
-        a: 500
-        b: 7
-        c: 0.004
-      - type: SynchronousMachine
-        name: A01_G2
-        S_rated: 100
-        pf: 0.85
-        a: 300
-        b: 6.8
-        c: 0.006
-      - type: SynchronousMachine
-        name: A01_G3
-        S_rated: 100
-        pf: 0.85
-        a: 400
-        b: 6.3
-        c: 0.009
+        name: G1
+        a: 0.0
+        b: 20.0
+        c: 0.043
+        Pmax: 332.4
+        Pmin: 0.0
+        Qmax: 10.0
+        Qmin: 0.0
 
-  - name: A02
-    Vbase: 6.9
+  - name: "2"
+    Vbase: 132.0
     bus_type: PV
     components:
       - type: SynchronousMachine
-        name: A02_G1
-        P: 80
-        S_rated: 100
-        pf: 0.85
-        a: 500
-        b: 6.4
-        c: 0.008
-      - type: SynchronousMachine
-        name: A02_G2
-        P: 80
-        S_rated: 100
-        pf: 0.85
-        a: 400
-        b: 7.2
-        c: 0.008
-      - type: SynchronousMachine
-        name: A02_G3
-        P: 80
-        S_rated: 100
-        pf: 0.85
-        a: 300
-        b: 6.9
-        c: 0.008
+        name: G2
+        P: 40.0
+        a: 0.0
+        b: 20.0
+        c: 0.25
+        Pmax: 140.0
+        Pmin: 0.0
+        Qmax: 50.0
+        Qmin: -40.0
+      - type: Load
+        name: L2
+        P: 21.7
+        Q: 12.7
 
-  - name: B01
-    Vbase: 22
+  - name: "3"
+    Vbase: 132.0
+    bus_type: PV
+    components:
+      - type: SynchronousMachine
+        name: G3
+        P: 0.0
+        a: 0.0
+        b: 40.0
+        c: 0.01
+        Pmax: 100.0
+        Pmin: 0.0
+        Qmax: 40.0
+        Qmin: 0.0
+      - type: Load
+        name: L3
+        P: 94.2
+        Q: 19.0
+
+  - name: "4"
+    Vbase: 132.0
     bus_type: PQ
     components:
       - type: Load
-        name: City_Mall
-        P: 100
-        Q: 50
-      - type: AsynchronousMachine
-        name: Industrial_Compressor
-        P_rated: 300
-        V_rated: 22
-        Rs: 0.05
-        Xs: 0.1
-        Rr: 0.04
-        Xr: 0.08
-        Xm: 3.0
-        poles: 4
-        freq: 50
-        load_type: 'quadratic'
+        name: L4
+        P: 47.8
+        Q: -3.9
+
+  - name: "5"
+    Vbase: 132.0
+    bus_type: PQ
+    components:
+      - type: Load
+        name: L5
+        P: 7.6
+        Q: 1.6
+
+  - name: "6"
+    Vbase: 33.0
+    bus_type: PV
+    components:
+      - type: SynchronousMachine
+        name: G6
+        P: 0.0
+        a: 0.0
+        b: 20.0
+        c: 0.01
+        Pmax: 100.0
+        Pmin: 0.0
+        Qmax: 24.0
+        Qmin: -6.0
+      - type: Load
+        name: L6
+        P: 11.2
+        Q: 7.5
+
+  - name: "7"
+    Vbase: 33.0
+    bus_type: PQ
+    components: []
+
+  - name: "8"
+    Vbase: 33.0
+    bus_type: PV
+    components:
+      - type: SynchronousMachine
+        name: G8
+        P: 0.0
+        a: 0.0
+        b: 20.0
+        c: 0.01
+        Pmax: 100.0
+        Pmin: 0.0
+        Qmax: 24.0
+        Qmin: -6.0
+
+  - name: "9"
+    Vbase: 33.0
+    bus_type: PQ
+    components:
+      - type: Load
+        name: L9
+        P: 29.5
+        Q: 16.6
       - type: Shunt
-        name: B01_Cap_Bank
-        Q_nom: 100
+        name: Cap9
+        Q_nom: 19.0
 
-# --- Branch Definitions (Lines & Transformers) ---
+  - name: "10"
+    Vbase: 33.0
+    bus_type: PQ
+    components:
+      - type: Load
+        name: L10
+        P: 9.0
+        Q: 5.8
+
+  - name: "11"
+    Vbase: 33.0
+    bus_type: PQ
+    components:
+      - type: Load
+        name: L11
+        P: 3.5
+        Q: 1.8
+
+  - name: "12"
+    Vbase: 33.0
+    bus_type: PQ
+    components:
+      - type: Load
+        name: L12
+        P: 6.1
+        Q: 1.6
+
+  - name: "13"
+    Vbase: 33.0
+    bus_type: PQ
+    components:
+      - type: Load
+        name: L13
+        P: 13.5
+        Q: 5.8
+
+  - name: "14"
+    Vbase: 33.0
+    bus_type: PQ
+    components:
+      - type: Load
+        name: L14
+        P: 14.9
+        Q: 5.0
+      - type: Battery
+        name: BESS_14
+        is_candidate: true
+        capex_per_mw: 200000.0
+        capex_per_mwh: 350000.0
+        max_build_mw: 50.0
+        max_build_mwh: 200.0
+        lifetime_years: 10
+        interest_rate: 0.05
+        eta: 0.95
+        init_soc: 0.5
+        P_max: 0.0
+        E_max: 0.0
+      - type: Inverter
+        name: PV_14
+        is_candidate: true
+        source_type: solar
+        capex_per_mw: 900000.0
+        max_build_mw: 80.0
+        lifetime_years: 20
+        interest_rate: 0.05
+        S_max: 1.97
+
 branches:
-  - type: Transformer
-    name: TR1_A01_B01
-    from_bus: A01
-    to_bus: B01
-    S_max: 550
-    R: 0.002
-    X: 0.04
-    tap_ratio: 1.0
-    auto_tap: true
-    controlled_bus: B01
-    target_V: 1.0
-    tap_step: 0.0125
+  # Transmission Lines
+  - {type: TransmissionLine, name: "L1-2", from_bus: "1", to_bus: "2", R: 0.01938, X: 0.05917, S_max: 100}
+  - {type: TransmissionLine, name: "L1-5", from_bus: "1", to_bus: "5", R: 0.05403, X: 0.22304, S_max: 100}
+  - {type: TransmissionLine, name: "L2-3", from_bus: "2", to_bus: "3", R: 0.04699, X: 0.19797, S_max: 100}
+  - {type: TransmissionLine, name: "L2-4", from_bus: "2", to_bus: "4", R: 0.05811, X: 0.17632, S_max: 100}
+  - {type: TransmissionLine, name: "L2-5", from_bus: "2", to_bus: "5", R: 0.05695, X: 0.17388, S_max: 100}
+  - {type: TransmissionLine, name: "L3-4", from_bus: "3", to_bus: "4", R: 0.06701, X: 0.17103, S_max: 100}
+  - {type: TransmissionLine, name: "L4-5", from_bus: "4", to_bus: "5", R: 0.01335, X: 0.04211, S_max: 100}
+  - {type: TransmissionLine, name: "L6-11", from_bus: "6", to_bus: "11", R: 0.09498, X: 0.19890, S_max: 100}
+  - {type: TransmissionLine, name: "L6-12", from_bus: "6", to_bus: "12", R: 0.12291, X: 0.25581, S_max: 100}
+  - {type: TransmissionLine, name: "L6-13", from_bus: "6", to_bus: "13", R: 0.06615, X: 0.13027, S_max: 100}
+  - {type: TransmissionLine, name: "L7-8", from_bus: "7", to_bus: "8", R: 0.0, X: 0.17615, S_max: 100}
+  - {type: TransmissionLine, name: "L7-9", from_bus: "7", to_bus: "9", R: 0.0, X: 0.11001, S_max: 100}
+  - {type: TransmissionLine, name: "L9-10", from_bus: "9", to_bus: "10", R: 0.03181, X: 0.08450, S_max: 100}
+  - {type: TransmissionLine, name: "L9-14", from_bus: "9", to_bus: "14", R: 0.12711, X: 0.27038, S_max: 100}
+  - {type: TransmissionLine, name: "L10-11", from_bus: "10", to_bus: "11", R: 0.08205, X: 0.19207, S_max: 100}
+  - {type: TransmissionLine, name: "L12-13", from_bus: "12", to_bus: "13", R: 0.22092, X: 0.19988, S_max: 100}
+  - {type: TransmissionLine, name: "L13-14", from_bus: "13", to_bus: "14", R: 0.17093, X: 0.34802, S_max: 100}
 
-  - type: Transformer
-    name: TR2_A02_B01
-    from_bus: A02
-    to_bus: B01
-    S_max: 550
-    R: 0.002
-    X: 0.04
-    tap_ratio: 1.0
-    auto_tap: true
-    controlled_bus: B01
-    target_V: 1.0
-    tap_step: 0.0125
-
-  - type: TransmissionLine
-    name: Line_A01_A02
-    from_bus: A01
-    to_bus: A02
-    S_max: 300
-    R: 0.01
-    X: 0.05
-    B_shunt: 0.01
+  # Transformers
+  - {type: Transformer, name: "T4-7", from_bus: "4", to_bus: "7", R: 0.0, X: 0.20912, tap_ratio: 0.978}
+  - {type: Transformer, name: "T4-9", from_bus: "4", to_bus: "9", R: 0.0, X: 0.55618, tap_ratio: 0.969}
+  - {type: Transformer, name: "T5-6", from_bus: "5", to_bus: "6", R: 0.0, X: 0.25202, tap_ratio: 0.932}

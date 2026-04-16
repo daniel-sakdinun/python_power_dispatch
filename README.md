@@ -1,126 +1,109 @@
 # ⚡ Four-Quadrant Power Analysis & Computational Engine (4PACE)
 
 [![Status](https://img.shields.io/badge/Status-Early%20Access-orange.svg)]()
-[![PyPI version](https://img.shields.io/pypi/v/4pace.svg)](https://pypi.org/project/4pace/)
+[![Version](https://img.shields.io/badge/version-v0.3.0a0-blue.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-> **⚠️ Early Access Notice**
+> **⚠️ Early Access Notice (v0.3.0a0)**
 > 
-> This project is currently in **Early Access (v0.2.0a0)**. While the core engine is functional and capable of solving complex power flow and optimization problems, it is still undergoing significant development. Features may change, and bug reports or feedback are highly encouraged to help reach the stable v1.0.0 release.
+> This project has undergone a massive architectural refactoring. It is now a full-fledged Time-Series Optimization Engine capable of both Operational Simulation and Capacity Expansion Planning. 
 
-**4PACE** is a high-precision Power System Optimization Engine designed for analyzing and determining the most efficient operating points for electrical grids. Developed entirely in Python using only core scientific libraries, it ensures maximum computational efficiency and provides the flexibility needed to scale capabilities for modern grid demands.
-
----
-
-## 🧐 Why "4PACE"?
-
-The name 4PACE reflects the core pillars of this project:
-* **4-Quadrant:** The ability to simulate electrical equipment behavior across all four quadrants of active and reactive power, whether operating as a Generator, Motor, or Condenser.
-* **Power Analysis:** Comprehensive steady-state analysis powered by robust algorithms like Fast Decoupled Power Flow (FDPF).
-* **Computational Engine:** Driven by the mathematical prowess of NumPy and SciPy to ensure rapid numerical convergence.
+**4PACE** is a high-precision, commercial-grade Power System Optimization Engine designed for modern electrical grids. Built entirely in Python using cutting-edge convex optimization (CVXPY) and graph theory (NetworkX), 4PACE handles everything from radial microgrids to complex mesh networks like the IEEE 14 Bus System.
 
 ---
 
-* **Network Topology Management:** Built on top of `networkx` for robust and intuitive graph-based grid modeling.
-* **Advanced Steady-State Analysis:** Highly optimized **Fast Decoupled Power Flow (FDPF)** algorithm for rapid convergence, complete with **Dynamic Q-Limit Enforcement** (automatic PV to PQ bus switching).
-* **Optimal Power Flow (OPF):** Full non-linear AC OPF considering $I^2R$ losses, voltage bounds, reactive power (Q), and hard branch flow limits ($S_{max}$).
-* **Grid Security & Monitoring:** Automatic transmission line overload checking and load percentage reporting.
-* **Advanced Equipment Models:**
-  * **Synchronous Machines:** Supports Generator, Motor, and Condenser modes with strict PQ limits.
-  * **Asynchronous Machines (NEW):** Induction motor models featuring real-time slip ($s$) and torque-balance dynamics that actively respond to grid voltage variations.
-  * **Branch Models:** Pi-model Transmission Lines and **OLTC Transformers** (On-Load Tap Changers with automatic voltage regulation and tap step adjustments).
-  * **Shunts (NEW):** Capacitor banks and Reactors with voltage-dependent reactive power injection ($Q \propto V^2$).
-  * **Loads:** Supports Constant Power (PQ), Constant Current (I), and Constant Impedance (Z) models.
-* **Human-Readable Config:** Effortlessly load entire grid topologies via `YAML` without hardcoding Python scripts.
+## 🚀 What's New in v0.3.0a0? (The Architecture Leap)
+
+* **Unified MPOPF Engine:** A powerful Multi-Period Optimal Power Flow engine capable of 24-hour time-series simulations.
+* **Switchable Relaxation (SOCP & SDP):** * `relax='SOCP'`: Ultra-fast Branch Flow Model for Radial Distribution Grids.
+  * `relax='SDP'`: Highly accurate Bus Injection Model (Hermitian Matrix) for complex Mesh/Ring Networks.
+* **Capacity Expansion Planning (CEP):** AI-driven investment decision module. 4PACE can now calculate the optimal tradeoff between CapEx (Installation Costs) and OpEx (Fuel/Operating Costs) to automatically size candidate Batteries (BESS) and Solar Inverters.
+* **Robust N-R Validation:** Every optimization plan is automatically validated by a full AC Newton-Raphson solver to ensure 100% physical feasibility (KCL/KVL compliance) and automatic PV-to-PQ switching during reactive power limits.
+* **Clean OOP Architecture:** Complete separation of concerns (`model.py` for physics, `psys.py` for topology, `pfa.py` for algorithms).
 
 ---
 
-## 📦 Installation
+## 🛠️ Quick Start Guide
 
-Since 4PACE is now available on PyPI, you can install the latest early access version directly using `pip`:
-
-```bash
-pip install 4pace
-```
-
-Note: Requires Python 3.10 or higher.
-
----
-
-## 🚀 Quick Start (QOL Feature)
-**4PACE** allows you to separate your grid configuration from your logic.
-
-1. Define your grid (config.yaml)
-Create a configuration file to specify your buses, machines, lines, and advanced features like OLTC:
+### 1. Define your grid and candidate assets (`config.yaml`)
+Create a configuration file. You can now add `is_candidate: true` and cost parameters to let AI decide the optimal sizing for your grid.
 
 ```yaml
 Sbase: 100.0
 buses:
-  - name: A01
-    Vbase: 6.9
+  - name: "Bus_A"
+    Vbase: 115.0
     bus_type: Slack
     components:
       - type: SynchronousMachine
         name: Gen1
-        S_rated: 100
-        a: 500
-        b: 7
-        c: 0.004
-  - name: B01
-    Vbase: 22
+        S_rated: 100.0
+        a: 100.0
+        b: 25.0
+        c: 0.005
+
+  - name: "Bus_B"
+    Vbase: 115.0
     bus_type: PQ
     components:
       - type: Load
-        name: City_Mall
-        P: 240
-        Q: 80
-      - type: Shunt
-        name: CapBank1
-        Q_nom: 50
-branches:
-  - type: Transformer
-    name: TR1
-    from_bus: A01
-    to_bus: B01
-    R: 0.002
-    X: 0.04
-    auto_tap: true
-    controlled_bus: B01
-    target_V: 1.0
+        name: Load_B
+        P: 80.0
+        Q: 20.0
+      # AI will decide how many MW/MWh to build based on CapEx vs OpEx
+      - type: Battery
+        name: Candidate_BESS
+        is_candidate: true
+        capex_per_mw: 200000.0
+        capex_per_mwh: 350000.0
+        max_build_mw: 50.0
+        max_build_mwh: 200.0
+        lifetime_years: 10
+        interest_rate: 0.05
 ```
 
+### 2. Prepare Time-Series Data (profiles.csv)
+Provide 24-hour multipliers for your loads and renewable sources.
+```csv
+Hour,Load_B,Candidate_PV
+0,0.4,0.0
+...
+12,0.8,1.0
+...
+19,1.3,0.0
+```
 
-2. Run the Solver
-
+### 3. Run the Simulation (Python)
+Execute the planning and operation sequence using the highly optimized Core Engine.
 ```python
-from fourpace.psys import Grid # Professional Clean Import
+import pandas as pd
+from fourpace.psys import Grid
+from fourpace.pfa import CEP, plan
 
-# Load your configuration
-grid = Grid.load('config.yaml') 
+# Load configurations
+grid = Grid.load('config.yaml')
+profile_df = pd.read_csv('profiles.csv')
 
-# Run Optimal Power Flow
-grid.eco_dispatch()
+# Step 1: Investment Phase (Capacity Expansion Planning)
+# AI calculates optimal sizes for candidate assets (BESS, Solar)
+CEP(grid, profile_df, relax='SOCP', solver_name='CLARABEL')
 
-# Solve Fast Decoupled Power Flow (with OLTC & Q-Limits)
-grid.solve()
-
-# Check for Transmission Line Overloads
-grid.check_overload()
+# Step 2: Operational Phase & Physical Validation
+# AI dispatches the assets and runs Newton-Raphson validation per step
+plan(grid, profile_df, relax='SDP', solver='SCS')
 ```
 
 ---
 
-## 🗺️ Roadmap
-[ ] Integration of Inverter-Based Resources (IBRs).
+### 🔬 Under the Hood
+4PACE utilizes a "Plan-then-Validate" architecture:
 
-[ ] Transient and Dynamic Stability Analysis.
+1. Master Plan Generation: Uses Convex Relaxation (SOCP/SDP) to find the global optimum for the entire 24-hour horizon, taking into account inter-temporal constraints (like Battery State of Charge).
 
-[ ] Interactive Web-based Visualization Dashboard.
-
-## 🤝 Contributing
-Contributions are welcome! If you find a bug or have a feature request, please open an issue on our GitHub repository.
+2. Physical Check-bill: The results (Voltage and Phase Angles) are fed as a warm-start into the exact non-linear AC Power Flow (Newton-Raphson) to guarantee that the final results strictly obey Kirchhoff's laws.
 
 ---
 
-Developed with ❤️ for the Power Engineering Community.
+### 📜 License
+This project is licensed under the GNU Affero General Public License v3.0 (AGPLv3). See the LICENSE file for details. This ensures that the core mathematical engine remains open and beneficial to the entire engineering community.
